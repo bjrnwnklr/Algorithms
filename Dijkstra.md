@@ -14,7 +14,7 @@ One of the benefits of the algorithm is that it generates a map of the shortest 
 
 ```python
 from collections import defaultdict
-from heapq import *
+from heapq import heappush, heappop
 
 def dijkstra(edges, f, t):
     g = defaultdict(list)
@@ -26,7 +26,7 @@ def dijkstra(edges, f, t):
         (cost,v1,path) = heappop(q)
         if v1 not in seen:
             seen.add(v1)
-            path = (v1, path)
+            path += (v1, )
             if v1 == t: return (cost, path)
 
             for c, v2 in g.get(v1, ()):
@@ -50,12 +50,12 @@ if __name__ == "__main__":
         ("F", "G", 11)
     ]
 
-    print "=== Dijkstra ==="
-    print edges
-    print "A -> E:"
-    print dijkstra(edges, "A", "E")
-    print "F -> G:"
-    print dijkstra(edges, "F", "G")
+    print("=== Dijkstra ===")
+    print(edges)
+    print("A -> E:")
+    print(dijkstra(edges, "A", "E"))
+    print("F -> G:")
+    print(dijkstra(edges, "F", "G"))
 ```
 
 ## Graphs using networkx / nx.Graph
