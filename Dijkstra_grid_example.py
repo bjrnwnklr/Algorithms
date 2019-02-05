@@ -14,7 +14,10 @@ TYPES = 3
 types = {0: '.', 1: '~', 2: '#'}
 n_coords = [(0, -1), (1, 0), (0, 1), (-1, 0)]
 
-#grid = {(c, r): random.randrange(0, TYPES) for c in range(GRID_SIZE) for r in range(GRID_SIZE)}
+def gen_grid():
+    grid = {(c, r): random.randrange(0, TYPES) for c in range(GRID_SIZE) for r in range(GRID_SIZE)}
+    return grid
+
 def read_grid():
     g = dict()
     for r, l in enumerate(open('grid.txt')):
@@ -32,6 +35,13 @@ def write_grid(grid):
         f.write(''.join([str(grid[(c, r)]) for c in range(GRID_SIZE)]) + '\n')
     f.close
 
+def print_path(grid, path):
+    for r in range(GRID_SIZE):
+        line = ''
+        for c in range(GRID_SIZE):
+            x = 'o' if (c, r) in path else types[grid[(c, r)]]
+            line += x
+        print(line)
 
 def dijkstra(grid, f, t):
 
