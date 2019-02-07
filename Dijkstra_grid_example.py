@@ -7,12 +7,15 @@ import random
 # the weight of the edges:
 #   - each step costs minimum of 1
 #   - changing between terrain additionally costs abs(a - b)
-GRID_SIZE = 20
+GRID_SIZE = 40
 start = (0, 0)
-target = (19, 19)
+target = (37, 37)
 TYPES = 3
 types = {0: '.', 1: '~', 2: '#'}
 n_coords = [(0, -1), (1, 0), (0, 1), (-1, 0)]
+
+
+################### Helper functions
 
 def gen_grid():
     grid = {(c, r): random.randrange(0, TYPES) for c in range(GRID_SIZE) for r in range(GRID_SIZE)}
@@ -42,6 +45,17 @@ def print_path(grid, path):
             x = 'o' if (c, r) in path else types[grid[(c, r)]]
             line += x
         print(line)
+
+
+############ run an example
+def run_example():
+    grid = gen_grid()
+    print_grid(grid)
+    c, p = dijkstra(grid, start, target)
+    print(c, p)
+    print_path(grid, p)
+
+############ Main algorithm
 
 def dijkstra(grid, f, t):
 
