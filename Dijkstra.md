@@ -58,6 +58,10 @@ if __name__ == "__main__":
     print(dijkstra(edges, "F", "G"))
 ```
 
+## Implementing Dijkstra to find shortest path in a grid
+
+Advent of code 2018, day 22, part 2 - solved using Dijkstra search with 3 dimensions (row, columns, tool equipped).
+
 ## Graphs using networkx / nx.Graph
 
 The NetworkX library for Python provides a Graph model and many different search algorithms, including Dijkstra.
