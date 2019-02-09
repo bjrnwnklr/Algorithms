@@ -82,7 +82,6 @@ def BFS(grid, start):
         v1, p = q.pop() # removes element from the right side of the queue
         if v1 not in seen:
             seen.add(v1)
-            new_p = p + [v1] # add the current grid to the path (make sure to use a copy of the path!)
 
             # find all valid neighbours
             for n in n_coords:
@@ -90,8 +89,9 @@ def BFS(grid, start):
                 if v_next in grid and v_next not in seen and grid[v_next] != 1:
                     # push into queue - on the left side
                     # set the path to this new square
-                    path[v_next] = new_p
-                    q.appendleft((v_next, new_p))
+                    next_path = p + [v_next]
+                    path[v_next] = next_path
+                    q.appendleft((v_next, next_path))
                   
     # once q is empty, return the dictionary with paths
     return path
