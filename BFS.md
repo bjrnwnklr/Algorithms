@@ -6,6 +6,12 @@ It uses the opposite strategy as depth-first search, which instead explores the 
 
 BFS can be implemented using a queue (First in first out).
 
+If all the edges in a graph are of the same weight, then BFS can also be used to find the minimum distance between the nodes in a graph.
+
+### Complexity
+
+The time complexity of BFS is O(V + E), where V is the number of nodes and E is the number of edges.
+
 ## Explanations / Examples
 
 [Wikipedia - BFS](https://en.wikipedia.org/wiki/Breadth-first_search)
@@ -15,6 +21,7 @@ BFS can be implemented using a queue (First in first out).
 [Hackerearth - BFS notes and tutorial](https://www.hackerearth.com/practice/algorithms/graphs/breadth-first-search/tutorial/)
 
 [Finding Shortest Paths using Breadth First Search (medium freecodecamp)](https://medium.freecodecamp.org/exploring-the-applications-and-limits-of-breadth-first-search-to-the-shortest-paths-in-a-weighted-1e7b28b3307)
+This is a very detailed description, covering many scenarios, e.g. in weighted graphs, level traversal, finding shortest path for a maximum number of levels.
 
 ## My clean implementation
 
