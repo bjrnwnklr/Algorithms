@@ -1,12 +1,12 @@
-from collections import defaultdict
-from heapq import heappush, heappop
+from collections import defaultdict, deque
 import random
 
 # generate a simple grid with each node in the grid having one of 
 # two terrain types (0 - accessible, 1 - wall, inaccessible). Each step costs 1, 
 # walls are inaccessible.
-GRID_SIZE = 20
+GRID_SIZE = 30
 TYPES = 2
+PERC_GROUND = 75 # how many % of the grid is covered by normal ground (rest is walls)
 types = {0: '.', 1: '#'}
 n_coords = [(0, -1), (1, 0), (0, 1), (-1, 0)] # coordinates of neighbours
 
@@ -14,12 +14,11 @@ n_coords = [(0, -1), (1, 0), (0, 1), (-1, 0)] # coordinates of neighbours
 ################### Helper functions
 
 def gen_grid():
-    #grid = {(c, r): random.randrange(0, TYPES) for c in range(GRID_SIZE) for r in range(GRID_SIZE)}
     grid = {(c, r): 1 if c == 0 or r == 0 or c == GRID_SIZE - 1 or r == GRID_SIZE - 1 else 0 
             for c in range(GRID_SIZE) for r in range(GRID_SIZE)}
     for r in range(1, GRID_SIZE - 1):
         for c in range(1, GRID_SIZE - 1):
-            grid[(c, r)] = random.choices([0, 1], cum_weights = [85, 100])[0]
+            grid[(c, r)] = random.choices([0, 1], cum_weights = [PERC_GROUND, 100])[0]
     return grid
 
 def read_grid():
@@ -54,6 +53,8 @@ def print_path(grid, path, start, target):
             line += x
         print(line)
 
+# randomly select coordinates within the grid and return them if they are not walls
+# can be used to generate random start and target coordinates
 def rand_select(grid):
     while True:
         c, r = random.randrange(1, GRID_SIZE - 1), random.randrange(1, GRID_SIZE - 1)
@@ -63,30 +64,34 @@ def rand_select(grid):
 ############ run an example
 def run_example():
     grid = gen_grid()
-    print_grid(grid)
     # pick start and target coordinates
     start = rand_select(grid)
     target = rand_select(grid)
-    p = []
-    #c, p = dijkstra(grid, start, target)
-    #print(c, p)
+    paths = BFS(grid, start)
+    p = paths[target]
     print_path(grid, p, start, target)
+    print('From %s to %s: %d steps' % (str(start), str(target), len(p)))
 
 ############## BFS algorithm
-# returns ?
+# returns a dictionary of paths from start to each accessible square in the grid
 def BFS(grid, start):
-    q = [start]
+    q = deque([(start, [])])
     seen = set()
     path = defaultdict(list)
     while q:
-        v1 = q.pop()
+        v1, p = q.pop() # removes element from the right side of the queue
         if v1 not in seen:
             seen.add(v1)
-            path[v1].append(v1)
+            new_p = p + [v1] # add the current grid to the path (make sure to use a copy of the path!)
 
             # find all valid neighbours
             for n in n_coords:
                 v_next = (v1[0] + n[0], v1[1] + n[1])
                 if v_next in grid and v_next not in seen and grid[v_next] != 1:
-                    # push into queue
-                    # mark as seen
+                    # push into queue - on the left side
+                    # set the path to this new square
+                    path[v_next] = new_p
+                    q.appendleft((v_next, new_p))
+                  
+    # once q is empty, return the dictionary with paths
+    return path

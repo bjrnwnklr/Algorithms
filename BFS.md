@@ -25,3 +25,34 @@ This is a very detailed description, covering many scenarios, e.g. in weighted g
 
 ## My clean implementation
 
+This uses a grid generated from walls (type: 1) and floor (type: 0), then generates a start and target coordinate.
+
+The BFS algorithm calculates paths to each accessible square from `start` and returns a `defaultdict` with the paths. The length of the respective dictionary entry is the number of steps required to get to the respective tile.
+
+```python
+############## BFS algorithm
+# returns a dictionary of paths from start to each accessible square in the grid
+def BFS(grid, start):
+    q = deque([(start, [])])
+    seen = set()
+    path = defaultdict(list)
+    while q:
+        v1, p = q.pop() # removes element from the right side of the queue
+        if v1 not in seen:
+            seen.add(v1)
+            new_p = p + [v1] # add the current grid to the path (make sure to use a copy of the path!)
+
+            # find all valid neighbours
+            for n in n_coords:
+                v_next = (v1[0] + n[0], v1[1] + n[1])
+                if v_next in grid and v_next not in seen and grid[v_next] != 1:
+                    # push into queue - on the left side
+                    # set the path to this new square
+                    path[v_next] = new_p
+                    q.appendleft((v_next, new_p))
+                  
+    # once q is empty, return the dictionary with paths
+    return path
+```
+
+
