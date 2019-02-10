@@ -86,7 +86,10 @@ def BFS(grid, start):
             # find all valid neighbours
             for n in n_coords:
                 v_next = (v1[0] + n[0], v1[1] + n[1])
-                if v_next in grid and v_next not in seen and grid[v_next] != 1:
+                if (v_next in grid 
+                    and v_next not in seen 
+                    and v_next not in path
+                    and grid[v_next] != 1):
                     # push into queue - on the left side
                     # set the path to this new square
                     next_path = p + [v_next]

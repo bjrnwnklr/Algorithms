@@ -61,3 +61,6 @@ def BFS(grid, start):
 
 Used BFS in the AoC 2018 challenge for day 15 - elves vs goblins
 
+## TO DO
+
+* How to deal with cyclical graphs (where there are more than one path to some nodes) - currently we take the first path
