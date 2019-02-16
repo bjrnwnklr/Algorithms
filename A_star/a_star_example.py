@@ -5,7 +5,7 @@ import random
 # generate a simple grid with each node in the grid having one of 
 # two terrain types (0 - accessible, 1 - wall, inaccessible). Each step costs 1, 
 # walls are inaccessible.
-GRID_SIZE = 10
+GRID_SIZE = 40
 TYPES = 2
 PERC_GROUND = 75 # how many % of the grid is covered by normal ground (rest is walls)
 types = {0: '.', 1: '#'}
