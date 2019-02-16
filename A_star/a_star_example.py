@@ -1,10 +1,11 @@
-from collections import defaultdict, deque
+from collections import defaultdict
+from heapq import heappush, heappop
 import random
 
 # generate a simple grid with each node in the grid having one of 
 # two terrain types (0 - accessible, 1 - wall, inaccessible). Each step costs 1, 
 # walls are inaccessible.
-GRID_SIZE = 30
+GRID_SIZE = 10
 TYPES = 2
 PERC_GROUND = 75 # how many % of the grid is covered by normal ground (rest is walls)
 types = {0: '.', 1: '#'}
@@ -67,34 +68,60 @@ def run_example():
     # pick start and target coordinates
     start = rand_select(grid)
     target = rand_select(grid)
-    paths = BFS(grid, start)
-    p = paths[target]
-    print_path(grid, p, start, target)
-    print('From %s to %s: %d steps' % (str(start), str(target), len(p)))
+    came_from, cost_so_far = a_star(grid, start, target)
+    
+    # check if we found a path
+    if came_from[target]:
+        p = reconstruct_path(came_from, start, target)
+        print_path(grid, p, start, target)
+        print('From %s to %s: %d steps' % (str(start), str(target), cost_so_far[target]))
+    else:
+        print('No path from %s to %s found.' % (str(start), str(target)))
 
-############## BFS algorithm
+############## A* algorithm
+# uses Manhattan heuristic to determine heuristic distance
+def heuristic(a, b):
+    (c1, r1) = a
+    (c2, r2) = b
+    return abs(c1 - c2) + abs(r1 - r2)
+
+def reconstruct_path(came_from, start, target):
+    current = target
+    path = []
+    while current != start:
+        path.append(current)
+        current = came_from[current]
+    path.append(start) # optional
+    path.reverse() # optional
+    return path
+
+
 # returns a dictionary of paths from start to each accessible square in the grid
 def a_star(grid, start, target):
-    q = deque([(start, [])])
-    seen = set()
-    path = defaultdict(list)
-    while q:
-        v1, p = q.pop() # removes element from the right side of the queue
-        if v1 not in seen:
-            seen.add(v1)
+    frontier = [(0, start)]     # our priority queue with starting values
+    came_from = defaultdict(list)   # path of visited nodes
+    cost_so_far = {start: 0}    # cost of the path so far
 
-            # find all valid neighbours
-            for n in n_coords:
-                v_next = (v1[0] + n[0], v1[1] + n[1])
-                if (v_next in grid 
-                    and v_next not in seen 
-                    and v_next not in path
-                    and grid[v_next] != 1):
-                    # push into queue - on the left side
-                    # set the path to this new square
-                    next_path = p + [v_next]
-                    path[v_next] = next_path
-                    q.appendleft((v_next, next_path))
-                  
-    # once q is empty, return the dictionary with paths
-    return path
+    while frontier:
+        _, current = heappop(frontier)
+
+        if current == target:
+            break
+
+        for n in n_coords:
+            v_next = (current[0] + n[0], current[1] + n[1])
+            # check if neighbour is a valid grid component
+            if (v_next in grid 
+                and grid[v_next] != 1):
+                new_cost = cost_so_far[current] + 1 # cost for moving in grid is always 1 - change if there is a specific cost for movements e.g. for terrain
+                # if we have not found cost for v_next, or found
+                # a cheaper path to v_next, add it to the queue
+                if (v_next not in cost_so_far or 
+                    new_cost < cost_so_far[v_next]):
+                    cost_so_far[v_next] = new_cost
+                    # estimate the cost to the goal
+                    priority = new_cost + heuristic(target, v_next)
+                    heappush(frontier, (priority, v_next))
+                    came_from[v_next] = current
+                
+    return came_from, cost_so_far
