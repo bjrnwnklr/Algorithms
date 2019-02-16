@@ -57,6 +57,23 @@ def BFS(grid, start):
     return path
 ```
 
+## BFS with two lists (from AOC 2018 day 22)
+
+Personally, I like to implement BFS using a pair of lists instead of a queue:
+
+```python
+current = [start]    # nodes with cost=n
+next = []            # nodes with cost=n+1
+
+while current:
+    for node in current:
+        next.extend(successors(node))
+    current, next = next, []
+
+```
+
+This is essentially the same as using a single queue, performance-wise; it allows you to easily keep track of the current level (by incrementing a counter on each iteration of the while loop); and it makes it a bit more obvious that you're assuming all nodes in "next" to have the same cost.
+
 ## Advent of Code implementation
 
 Used BFS in the AoC 2018 challenge for day 15 - elves vs goblins
