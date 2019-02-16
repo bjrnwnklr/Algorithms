@@ -31,3 +31,7 @@ A* is a modification of Dijkstra’s Algorithm that is optimized for a single de
 ### 5) Jump Point Search
    
 Jump Point Search (JPS) [3] is an online symmetry breaking algorithm which speeds up pathfinding on uniform-cost grid maps by "jumping over" many locations that would otherwise need to be explicitly considered. Unlike other similar algorithms JPS requires no preprocessing and has no memory overheads. Further, it is easily combined with most existing speedup techniques -- including abstraction and memory heuristics. It can speed up A* search by over an order magnitude and more.
+
+### 6) Flood fill algorithms
+
+[Wikipedia: Flood fill](https://en.wikipedia.org/wiki/Flood_fill)
