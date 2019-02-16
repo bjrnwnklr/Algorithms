@@ -85,6 +85,15 @@ def heuristic(a, b):
     (c2, r2) = b
     return abs(c1 - c2) + abs(r1 - r2)
 
+def neighbours(grid, v):
+    n_coords = [(0, -1), (1, 0), (0, 1), (-1, 0)]
+    results = []
+    for n in n_coords:
+        v_next = (v[0] + n[0], v[1] + n[1])
+        if v_next in grid and grid[v_next] != '1':
+            results.append(v_next)
+    return results
+
 def reconstruct_path(came_from, start, target):
     current = target
     path = []
@@ -108,20 +117,16 @@ def a_star(grid, start, target):
         if current == target:
             break
 
-        for n in n_coords:
-            v_next = (current[0] + n[0], current[1] + n[1])
-            # check if neighbour is a valid grid component
-            if (v_next in grid 
-                and grid[v_next] != 1):
-                new_cost = cost_so_far[current] + 1 # cost for moving in grid is always 1 - change if there is a specific cost for movements e.g. for terrain
-                # if we have not found cost for v_next, or found
-                # a cheaper path to v_next, add it to the queue
-                if (v_next not in cost_so_far or 
-                    new_cost < cost_so_far[v_next]):
-                    cost_so_far[v_next] = new_cost
-                    # estimate the cost to the goal
-                    priority = new_cost + heuristic(target, v_next)
-                    heappush(frontier, (priority, v_next))
-                    came_from[v_next] = current
+        for v_next in neighbours(grid, current):
+            new_cost = cost_so_far[current] + 1 # cost for moving in grid is always 1 - change if there is a specific cost for movements e.g. for terrain
+            # if we have not found cost for v_next, or found
+            # a cheaper path to v_next, add it to the queue
+            if (v_next not in cost_so_far or 
+                new_cost < cost_so_far[v_next]):
+                cost_so_far[v_next] = new_cost
+                # estimate the cost to the goal
+                priority = new_cost + heuristic(target, v_next)
+                heappush(frontier, (priority, v_next))
+                came_from[v_next] = current
                 
     return came_from, cost_so_far
