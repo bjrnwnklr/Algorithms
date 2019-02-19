@@ -70,7 +70,7 @@ class BW_Grid():
         results = []
         for n in n_coords:
             v_next = (v[0] + n[0], v[1] + n[1])
-            if v_next in self.grid and self.grid[v_next] != '1':
+            if v_next in self.grid and self.grid[v_next] != 1:
                 results.append(v_next)
         return results
 
