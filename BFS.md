@@ -40,19 +40,50 @@ def BFS(grid, start):
         v1, p = q.pop() # removes element from the right side of the queue
         if v1 not in seen:
             seen.add(v1)
-            
+
             # find all valid neighbours
             for n in n_coords:
                 v_next = (v1[0] + n[0], v1[1] + n[1])
-                if (v_next in grid 
-                    and v_next not in seen 
+                if (v_next in grid
+                    and v_next not in seen
                     and v_next not in path
                     and grid[v_next] != 1):
                     # push into queue - on the left side
                     # set the path to this new square
                     path[v_next] = p + [v_next]
                     q.appendleft((v_next, p + [v_next]))
-                  
+
+    # once q is empty, return the dictionary with paths
+    return path
+```
+
+## BFS implementation with a graph instead of a grid (AOC 2019 day 6)
+
+```python
+# generate graph with all neighbours for each node
+neighbours = defaultdict(list)
+for a, b in orbits:
+    neighbours[a].append(b)
+    neighbours[b].append(a)
+
+def BFS(graph, start):
+    q = deque([(start, [])])
+    seen = set()
+    path = defaultdict(list)
+    while q:
+        v1, p = q.pop() # removes element from the right side of the queue
+        if v1 not in seen:
+            seen.add(v1)
+
+            # find all valid neighbours
+            for v_next in graph[v1]:
+                if (v_next not in seen
+                    and v_next not in path):
+                    # push into queue - on the left side
+                    # set the path to this new square
+                    path[v_next] = p + [v_next]
+                    q.appendleft((v_next, p + [v_next]))
+
     # once q is empty, return the dictionary with paths
     return path
 ```
@@ -80,4 +111,4 @@ Used BFS in the AoC 2018 challenge for day 15 - elves vs goblins
 
 ## TO DO
 
-* How to deal with cyclical graphs (where there are more than one path to some nodes) - currently we take the first path
+-   How to deal with cyclical graphs (where there are more than one path to some nodes) - currently we take the first path
