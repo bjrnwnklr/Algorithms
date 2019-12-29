@@ -12,7 +12,7 @@ In computer science, a topological sort or topological ordering of a directed gr
 
 ## Algorithm
 
-Wikipedia has a good explanation and pseudo-code that I used for the AoC 2018 day 7 solution.
+Wikipedia has a good explanation and pseudo-code that I used for the AoC 2018 day 7 and the AOC 2019 day 14 solution.
 
 ### Kahn's algorithm	
 
