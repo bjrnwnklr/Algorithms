@@ -76,7 +76,47 @@ This is essentially the same as using a single queue, performance-wise; it allow
 
 ## Advent of Code implementation
 
-Used BFS in the AoC 2018 challenge for day 15 - elves vs goblins
+Used BFS in the AoC 2018 challenge for day 15 - elves vs goblins, and in the AoC 2019 challenge for day 15 (again!!!) (directing a droid through a maze using the `intcode` machine)
+
+### AoC 2019 day 15 implementation
+
+This is a really short implementation, can be easily re-used.
+
+It requires a graph (dictionary of lists) with valid neighbors - can be generated when mapping out a maze.
+
+```python
+graph = defaultdict(list)
+
+    # generate neighbors in the graph when mapping out the maze - only add accessible cells
+    # in a loop:
+    graph[current_pos].append(next_pos)
+    graph[next_pos].append(current_pos)
+   
+```
+
+```python
+# Do a BFS using the graph, starting from the oxygen source
+# - valid neighbors are contained in the graph dictionary
+
+q = deque([(start_pos, [])])
+seen = set()
+path = defaultdict(list)
+
+while(q):
+    current_pos, current_path = q.pop()
+
+    # go through neighbors using the graph
+    for neighbor in graph[current_pos]:
+        if neighbor not in seen:
+            seen.add(neighbor)
+            path[neighbor] = current_path + [neighbor]
+            q.appendleft((neighbor, current_path + [neighbor]))
+
+logging.info('BFS ended!')
+
+# get the longest path length from the starting node
+longest_from_start = max(path, key=lambda x: len(path[x]))    
+```
 
 ## TO DO
 
