@@ -82,15 +82,15 @@ Used BFS in the AoC 2018 challenge for day 15 - elves vs goblins, and in the AoC
 
 This is a really short implementation, can be easily re-used.
 
-It requires a graph (dictionary of lists) with valid neighbors - can be generated when mapping out a maze.
+It requires a graph (dictionary of sets) with valid neighbors - can be generated when mapping out a maze.
 
 ```python
-graph = defaultdict(list)
+graph = defaultdict(set)
 
     # generate neighbors in the graph when mapping out the maze - only add accessible cells
     # in a loop:
-    graph[current_pos].append(next_pos)
-    graph[next_pos].append(current_pos)
+    graph[current_pos].add(next_pos)
+    graph[next_pos].add(current_pos)
    
 ```
 
