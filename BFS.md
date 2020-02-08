@@ -149,6 +149,51 @@ logging.info('BFS ended!')
 longest_from_start = max(path, key=lambda x: len(path[x]))    
 ```
 
+### AOC 2019 day 18 implementation
+
+```python
+def map_keys_BFS(grid, start, doors, keys):
+    # BFS stuff
+    # q contains the following:
+    # 0: current position (x, y) tuple
+    # 1: current path (length of steps)
+    # 2: doors encountered (bitmask)
+    q = deque([(start, 0, start_key_mask)])
+    seen = set()
+    # path stores the path to each individual point in the grid as explored by BFS
+    path = defaultdict(int)
+    # stores a bitcoded register of doors between start and current position (bit set per door on path)
+    doors_from = defaultdict(int)
+    # keys found neighboring "start" (only real next neighbors)
+    keys_found = set()
+
+    # run BFS until we have explored every grid cell
+    while(q):
+
+        # removes element from the right side of the queue
+        current_pos, current_path, current_doors = q.pop()
+
+        if current_pos in seen:
+            continue
+
+        seen.add(current_pos)
+        path[current_pos] = current_path
+
+        new_doors = current_doors
+        if current_pos in doors:
+            new_doors = set_bit(current_doors, door_bits[doors[current_pos]])
+        doors_from[current_pos] = new_doors
+
+        if current_pos in keys:
+            keys_found.add(keys[current_pos])
+
+        # once at current_pos, find all valid neighbours
+        for next_step in neighbors(grid, current_pos):
+            q.appendleft((next_step, current_path + 1, new_doors))
+
+    return path, keys_found, doors_from
+```
+
 ## TO DO
 
 -   How to deal with cyclical graphs (where there are more than one path to some nodes) - currently we take the first path
