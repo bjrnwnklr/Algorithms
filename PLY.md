@@ -13,6 +13,8 @@ This package can only be installed by cloning the GitHub repo:
 To use PLY, simply copy the ply directory to your project and import lex and yacc from the associated ply package. For example:
 
 ```python
-from .ply import lex
-from .ply import yacc
+from ply import lex
+from ply import yacc
 ```
+
+See the example implementation in AoC 2020, day 18 for a very simple calculation grammar including changing the operator precedence by making PLUS a higher precedence than TIMES.
