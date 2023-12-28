@@ -110,3 +110,14 @@ while q:
 The NetworkX library for Python provides a Graph model and many different search algorithms, including Dijkstra.
 
 [NetworkX tutorial](https://networkx.github.io/documentation/stable/tutorial.html)
+
+## Dijkstra or other search algorithms (BFS etc) with multiple states
+
+**IMPORTANT** If we are using any of the search algorithms to find the shortest path to a position (e.g. in a 2d grid), but have multiple other parameters that define a state in the search tree (e.g. number of steps taken, a key configuration, etc) that allow us to reach the position in the 2d grid, we need to be aware that the first instance of when we reach the targetted end position might not be the shortest path yet.
+
+How to find the shortest path in these situations:
+
+-   Record the shortest path for each instance of reaching the target position (as there might be multiple states we can reach the end position in / from - depending on the other parameters of the state), and then after the queue is empty, take the minimum of these final end states.
+-   Build in a check using a dictionary that records the shortest length taken to reach a given state, and discard any next steps / neighbors if they have a shorter distance to the same state. This is an optimization that also cuts down on the number of states being evaluated.
+
+AOC 2023 day 17 uses Dijkstra with 2 other constraints (number of steps taken straight ahead, direction) and uses an additional dictionary (which can also be used instead of the seen set) to discard any states that have a longer path to a given state.
